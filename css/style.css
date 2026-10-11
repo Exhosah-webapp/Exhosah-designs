@@ -411,3 +411,34 @@ img.av{display:block;object-fit:cover}
 
 /* make the hidden attribute always win over display rules */
 [hidden]{display:none!important}
+
+/* =========================================================================
+   PROJECT COVERS IN MOTION (driven by the covers() block in js/main.js)
+   ========================================================================= */
+/* slow pan + zoom on the visible image; runs only while the card is on screen */
+.motion .slide.on{transform-origin:35% 25%;animation:scan calc(var(--slide,4.5s) * 2) ease-in-out infinite alternate;animation-play-state:paused}
+.motion.running .slide.on{animation-play-state:running}
+@keyframes scan{from{object-position:0% 0%;scale:1}to{object-position:100% 100%;scale:1.1}}
+
+/* story-style progress: one segment per image, the current one fills */
+.segs{position:absolute;left:14px;top:14px;z-index:2;display:flex;gap:5px;padding:8px 10px;border-radius:999px;pointer-events:none;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 0 0 1px var(--line)}
+.segs i{position:relative;width:26px;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.segs i::after{content:"";position:absolute;inset:0;background:var(--accent);transform-origin:0 50%;transform:scaleX(0)}
+.segs i.done::after,.segs i.cur::after{transform:scaleX(1)}
+.motion .segs i.cur::after{transform:scaleX(0);animation:fill var(--slide,4.5s) linear forwards;animation-play-state:paused}
+.motion.running .segs i.cur::after{animation-play-state:running}
+@keyframes fill{to{transform:scaleX(1)}}
+
+/* pause / play button inside the control pill */
+.gal .pp{display:grid;place-items:center}
+.gal .pp svg{grid-area:1/1;fill:currentColor}
+.gal .pp .i-play{display:none}
+.gal .pp[aria-pressed="true"] .i-pause{display:none}
+.gal .pp[aria-pressed="true"] .i-play{display:block}
+.gal .count + button{margin-right:2px}
+
+@media (max-width:560px){.card-top{flex-wrap:wrap;row-gap:2px}}
+@media (prefers-reduced-motion:reduce){
+  .motion .slide.on,.motion .segs i.cur::after{animation:none!important}
+}
