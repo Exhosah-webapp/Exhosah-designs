@@ -101,7 +101,7 @@ img.av{display:block;object-fit:cover}
 .gal .count{font-size:13px;color:var(--muted);min-width:34px;text-align:center;font-variant-numeric:tabular-nums}
 .card-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:20px}
 .card h3{font-size:clamp(1.4rem,2.2vw,1.8rem);letter-spacing:-.03em;font-weight:600;line-height:1.1}
-.card .year{color:var(--muted);font-size:15px}
+.card .year{color:var(--muted);font-size:15px;white-space:nowrap}
 .card .kind{color:var(--muted);margin-top:4px}
 .card .sum{margin-top:14px;max-width:62ch}
 .card .tags{margin-top:14px;color:var(--muted);font-size:14px}
@@ -264,7 +264,7 @@ img.av{display:block;object-fit:cover}
 .toast small{display:block;font-size:12px;color:color-mix(in srgb,var(--paper) 62%,transparent)}
 .toast b{display:block;font-weight:600;font-size:16px;letter-spacing:-.01em;line-height:1.25}
 .toast .d{display:block;color:color-mix(in srgb,var(--paper) 78%,transparent);font-size:14px;line-height:1.35;margin-top:2px}
-.confetti{position:fixed;width:8px;height:12px;border-radius:2px;z-index:80;pointer-events:none}
+.confetti{position:fixed;width:8px;height:12px;border-radius:2px;z-index:120;pointer-events:none}
 @media (max-width:560px){
   .hud-txt{display:none}
   .hud-btn{padding:0 8px}
@@ -306,3 +306,108 @@ img.av{display:block;object-fit:cover}
 @media (prefers-reduced-motion:reduce){
   .theme-toggle,.theme-toggle svg{transition:none!important}
 }
+
+/* =========================================================================
+   GAME LAYER v2 — XP, levels, stars, Pixel Hunt (driven by js/game.js)
+   ========================================================================= */
+
+/* ---- ring with the level number inside ---- */
+.ring-wrap{position:relative;width:34px;height:34px;flex:none;display:grid;place-items:center}
+.ring-wrap .ring{position:absolute;inset:0}
+.lvnum{position:relative;font-size:13px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.hud-panel{max-height:min(82vh,700px);overflow:auto;overscroll-behavior:contain}
+
+/* ---- panel: tabs, level, bar, quest ---- */
+.tabs{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--surface);margin-bottom:18px}
+.tabs button{flex:1;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;font-weight:500;padding:7px 10px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+.tabs button[aria-selected="true"]{background:var(--paper);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.tab[hidden]{display:none}
+.lvhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.lvhead small{display:block;color:var(--muted);font-size:12px}
+.lvhead h3{font-size:1.35rem;letter-spacing:-.03em;font-weight:600;line-height:1.1}
+.xpnum{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.xpbar{height:8px;border-radius:99px;background:var(--surface);margin-top:12px;overflow:hidden}
+.xpbar i{display:block;height:100%;width:var(--w,0%);background:var(--accent);border-radius:99px;transition:width .9s var(--ease)}
+.quest{margin-top:16px;padding:12px 14px;border-radius:14px;background:var(--surface);font-size:14px;line-height:1.35}
+.quest small{display:block;color:var(--muted);font-size:12px;margin-bottom:2px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chips span{padding:6px 12px;border-radius:99px;border:1px solid var(--line);font-size:13px;color:var(--muted)}
+.chips b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.sect{margin-top:18px}
+.sect small{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
+.sw{display:flex;gap:10px;flex-wrap:wrap}
+.swatch{position:relative;width:30px;height:30px;border-radius:50%;border:0;padding:0;background:var(--c);color:#fff;font:inherit;font-size:11px;font-weight:700;cursor:pointer;
+  display:grid;place-items:center;transition:transform .3s var(--spring),box-shadow .25s}
+:root[data-theme="dark"] .swatch{background:var(--cd);color:#0c0e16}
+.swatch:hover{transform:scale(1.12)}
+.swatch.on{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--ink)}
+.swatch.locked{opacity:.35;cursor:not-allowed}
+.swatch.locked:hover{transform:none}
+.swatch.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.acts{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.pbtn{border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:14px;font-weight:500;padding:9px 16px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+.pbtn:hover{background:var(--surface)}
+.pbtn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pbtn.primary:hover{background:var(--accent);border-color:var(--accent)}
+.ach{max-height:none}
+
+/* ---- XP pop-ups, star flight, level-up banner ---- */
+.xp-pop{position:fixed;z-index:110;pointer-events:none;font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--accent);
+  text-shadow:0 1px 0 color-mix(in srgb,var(--paper) 85%,transparent)}
+.star-fly{position:fixed;z-index:110;width:22px;height:22px;color:var(--accent);pointer-events:none}
+.star-fly svg,.star svg{width:100%;height:100%;fill:currentColor}
+.levelup{position:fixed;left:50%;top:38%;z-index:100;text-align:center;pointer-events:none;padding:26px 46px;border-radius:30px;
+  background:var(--ink);color:var(--paper);transform:translate(-50%,-50%) scale(.7);opacity:0;transition:transform .6s var(--spring),opacity .3s}
+.levelup.in{transform:translate(-50%,-50%) scale(1);opacity:1}
+.levelup small{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--paper) 65%,transparent)}
+.levelup b{display:block;font-size:clamp(2.4rem,7vw,3.6rem);letter-spacing:-.045em;line-height:1.05;font-weight:600}
+.levelup span{display:block;font-size:1.15rem;font-weight:500}
+.levelup em{display:block;margin-top:10px;font-style:normal;font-size:14px;color:var(--accent)}
+
+/* ---- hidden stars ---- */
+.star{position:absolute;z-index:6;width:var(--s,22px);height:var(--s,22px);padding:0;border:0;background:none;color:var(--accent);cursor:pointer;
+  animation:twinkle 3.2s ease-in-out infinite;animation-delay:var(--d,0s);transition:transform .35s var(--spring)}
+.star svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--accent) 65%,transparent))}
+.star:hover{animation:none;opacity:1;transform:scale(1.4) rotate(18deg)}
+@keyframes twinkle{0%,100%{opacity:.3;scale:.9}50%{opacity:.8;scale:1.1}}
+
+/* ---- Pixel Hunt ---- */
+.modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;
+  background:color-mix(in srgb,var(--ink) 45%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.modal.open{opacity:1;visibility:visible}
+.modal-card{width:min(680px,100%);padding:22px;border-radius:28px;background:var(--paper);border:1px solid var(--line);
+  transform:translateY(16px) scale(.97);transition:transform .5s var(--spring)}
+.modal.open .modal-card{transform:none}
+.mhead{display:flex;justify-content:space-between;align-items:center}
+.mhead h3{font-size:1.4rem;letter-spacing:-.03em;font-weight:600}
+.mclose{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:20px;line-height:1;cursor:pointer}
+.mclose:hover{background:var(--surface)}
+.mstats{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0 14px;color:var(--muted);font-size:14px}
+.mstats b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.arena{position:relative;aspect-ratio:16/10;border-radius:20px;background:var(--surface);overflow:hidden;cursor:crosshair;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.overlay{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:16px;text-align:center;padding:24px;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);z-index:2;cursor:default}
+.overlay p{max-width:36ch;color:var(--muted)}
+.overlay .big{font-size:clamp(3.4rem,12vw,6rem);line-height:1;letter-spacing:-.05em;font-weight:600}
+.tgt{position:absolute;width:var(--s);height:var(--s);padding:0;border:0;cursor:crosshair;touch-action:manipulation;
+  background:hsl(var(--h) 80% 58%);animation:tgt var(--life) linear forwards}
+.tgt.c{border-radius:50%}
+.tgt.q{border-radius:28%}
+.tgt.d{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+@keyframes tgt{0%{transform:scale(0)}12%{transform:scale(1)}100%{transform:scale(.25);opacity:.45}}
+
+@media (max-width:560px){
+  .levelup{padding:20px 28px}
+  .hud-panel{max-height:70vh}
+}
+@media (prefers-reduced-motion:reduce){
+  .star{animation:none;opacity:.6}
+  .levelup,.modal,.modal-card,.xpbar i,.swatch,.pbtn{transition:none!important}
+  .tgt{animation:none}
+  .swatch.shake{animation:none}
+}
+
+/* make the hidden attribute always win over display rules */
+[hidden]{display:none!important}
