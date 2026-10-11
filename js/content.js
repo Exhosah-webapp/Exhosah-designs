@@ -88,10 +88,10 @@ const SITE = {
       {
         name: "VitaLink",
         kind: "Healthcare equipment marketplace with an AI assistant",
-        year: "",
+        year: "Sep 8 – 10, 2026",
         tags: ["Healthcare", "Marketplace", "AI"],
         images: ["images/vitalink-landing.webp", "images/vitalink-ai-chat.webp"],
-        summary: "A marketplace for finding healthcare equipment from verified sellers. The landing page leads with a search and AI discovery prompt, and the signed-in experience is a chat where VitaLink AI recommends products with price, stock and verification details.",
+        summary: "A marketplace for finding healthcare equipment from verified sellers. The landing page leads with a search and AI discovery prompt, and the signed-in experience is a chat where VitaLink AI recommends products with price, stock and verification details. Designed in a three-day sprint.",
         link: "", linkLabel: ""
       },
       {
