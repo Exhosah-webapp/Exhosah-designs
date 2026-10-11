@@ -1,7 +1,7 @@
-/* play.js — interactions and the progress game.
-   Reads SITE.effects and SITE.game from content.js.
-   Optional: delete the <script src="js/play.js"> line in index.html and the
-   site still works, just without these extras. */
+/* play.js — interactions: cursor, magnetic buttons, tilt, count-up, stickers,
+   scroll-reactive marquees, confetti. Reads SITE.effects from content.js.
+   Optional: delete the <script src="js/play.js"> line in index.html (and the
+   game.js line after it, which needs this file) and the site still works. */
 (function () {
   "use strict";
 
@@ -21,8 +21,9 @@
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const accent = () => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2f4bff";
 
-  /* The game needs unlock() to exist before other features call it. */
-  let unlock = () => {};
+  /* Shared with game.js (loaded after this file). game.js replaces PF.unlock. */
+  const PF = window.PF = window.PF || {};
+  PF.unlock = PF.unlock || (() => {});
 
   /* ---------------------------------------------------------------------
      Scroll progress bar
@@ -152,7 +153,7 @@
         if (!reduced) el.firstElementChild.animate(
           [{ scale: 1 }, { scale: 0.88 }, { scale: 1.08 }, { scale: 1 }],
           { duration: 450, easing: "ease-out" });
-        unlock("play");
+        PF.unlock("play");
       }
     };
     el.addEventListener("pointerup", end);
@@ -174,7 +175,7 @@
       rate += ((1 + Math.min(dy * 0.14, 6)) - rate) * 0.1;
       if (rate < 1.005) rate = 1;
       for (const a of anims) a.playbackRate = rate;
-      if (rate > 4 && !fired) { fired = true; unlock("speed"); }
+      if (rate > 4 && !fired) { fired = true; PF.unlock("speed"); }
       requestAnimationFrame(tick);
     })();
   }
@@ -219,142 +220,6 @@
     }
   }
 
-  /* ---------------------------------------------------------------------
-     Progress game: sections explored + achievements
-     --------------------------------------------------------------------- */
-  if (FX.game) {
-    const SECTIONS = ["top", "work", "results", "about", "experience", "contact"];
-    const LEVELS = G.levels || ["Newcomer", "Explorer", "Insider", "Almost there", "Collaborator"];
-    const ACH = G.achievements || {};
-    const KEY = "pf-progress-v1";
-
-    let st = { sections: [], ach: [] };
-    try { const raw = localStorage.getItem(KEY); if (raw) st = Object.assign(st, JSON.parse(raw)); } catch (e) {}
-    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
-
-    const pct = () => Math.round(st.sections.length / SECTIONS.length * 100);
-    const levelName = () => LEVELS[pct() >= 100 ? 4 : Math.min(3, Math.floor(pct() / 25))] || "";
-
-    /* --- HUD --- */
-    const email = (S.person && S.person.email) || "";
-    const hud = document.createElement("div");
-    hud.className = "hud";
-    hud.innerHTML = `
-      <button class="hud-btn" type="button" aria-expanded="false" aria-controls="hud-panel">
-        <svg class="ring" viewBox="0 0 34 34" aria-hidden="true"><circle class="bg" cx="17" cy="17" r="15"/><circle class="fg" cx="17" cy="17" r="15"/></svg>
-        <span class="hud-txt"><b></b><small></small></span>
-      </button>
-      <div class="hud-panel" id="hud-panel" role="region" aria-label="Your progress">
-        <h3>Your progress</h3>
-        <p class="lv"></p>
-        <ul class="ach"></ul>
-        <div class="hud-done" hidden></div>
-        <button class="hud-reset" type="button">Reset progress</button>
-      </div>`;
-    document.body.appendChild(hud);
-    const toasts = document.createElement("div");
-    toasts.id = "toasts"; toasts.setAttribute("role", "status"); toasts.setAttribute("aria-live", "polite");
-    document.body.appendChild(toasts);
-
-    const btn = $(".hud-btn", hud), panel = $(".hud-panel", hud);
-
-    function render() {
-      const p = pct();
-      $(".ring", hud).style.setProperty("--p", (p / 100).toFixed(2));
-      $(".hud-txt b", hud).textContent = levelName();
-      $(".hud-txt small", hud).textContent = `${p}% explored`;
-      btn.setAttribute("aria-label", `Progress: ${levelName()}, ${p}% explored. Open achievements`);
-      $(".lv", hud).textContent = `${levelName()} · ${st.ach.length} of ${Object.keys(ACH).length} achievements`;
-      $(".ach", hud).innerHTML = Object.entries(ACH).map(([id, a]) => {
-        const ok = st.ach.includes(id);
-        const d = a.secret && !ok ? "Hidden achievement" : a.desc;
-        return `<li class="${ok ? "ok" : ""}"><span class="chk" aria-hidden="true"></span><span><b>${esc(a.secret && !ok ? "???" : a.title)}</b><small>${esc(d)}</small></span></li>`;
-      }).join("");
-      const done = $(".hud-done", hud);
-      if (p >= 100) {
-        done.hidden = false;
-        done.innerHTML = `<p>${esc(G.completeMessage || "You've seen it all.")}</p>` +
-          (email ? `<a class="btn btn-sm" href="mailto:${esc(email)}">Email me</a>` : "");
-      } else done.hidden = true;
-    }
-
-    const setOpen = open => {
-      hud.classList.toggle("open", open);
-      btn.setAttribute("aria-expanded", String(open));
-    };
-    btn.addEventListener("click", () => setOpen(!hud.classList.contains("open")));
-    addEventListener("keydown", e => { if (e.key === "Escape") setOpen(false); });
-    document.addEventListener("click", e => { if (!hud.contains(e.target)) setOpen(false); });
-    $(".hud-reset", hud).addEventListener("click", () => {
-      st = { sections: ["top"], ach: [] };
-      save(); render();
-    });
-
-    /* --- toasts --- */
-    const queue = []; let showing = false;
-    const STAR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.2 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"/></svg>';
-    function nextToast() {
-      const id = queue.shift();
-      if (!id) { showing = false; return; }
-      showing = true;
-      const a = ACH[id] || { title: id, desc: "" };
-      const el = document.createElement("div");
-      el.className = "toast";
-      el.innerHTML = `<span class="toast-ico">${STAR}</span><span><small>Achievement unlocked</small><b>${esc(a.title)}</b><span class="d">${esc(a.desc)}</span></span>`;
-      toasts.appendChild(el);
-      requestAnimationFrame(() => el.classList.add("in"));
-      const r = el.getBoundingClientRect();
-      burst(r.left + 30, r.top + 30, 26);
-      setTimeout(() => { el.classList.remove("in"); setTimeout(() => { el.remove(); nextToast(); }, 450); }, 3800);
-    }
-
-    /* --- state changes --- */
-    unlock = function (id) {
-      if (!ACH[id] || st.ach.includes(id)) return;
-      st.ach.push(id); save(); render();
-      queue.push(id); if (!showing) nextToast();
-    };
-    function markSection(id) {
-      if (!SECTIONS.includes(id) || st.sections.includes(id)) return;
-      st.sections.push(id); save(); render();
-      if (id === "work") unlock("work");
-      if (st.sections.length >= SECTIONS.length) unlock("all");
-    }
-
-    render();
-    markSection("top");
-
-    /* sections count as explored when they cross the middle of the screen */
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) markSection(e.target.id); }),
-        { rootMargin: "-45% 0px -45% 0px" });
-      SECTIONS.forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
-    }
-    addEventListener("scroll", () => {
-      if (scrollY > innerHeight * 0.5) unlock("start");
-      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) markSection("contact");
-    }, { passive: true });
-
-    /* clicks: gallery arrows, experience entries, contact links */
-    let opened = 0;
-    document.addEventListener("click", e => {
-      const t = e.target;
-      if (t.closest(".gal button")) unlock("gallery");
-      const sum = t.closest("summary");
-      if (sum && sum.parentElement && !sum.parentElement.open && ++opened >= 2) unlock("fine");
-      if (t.closest('a[href^="mailto:"], .foot-links a')) unlock("hello");
-    });
-
-    /* dark mode switch (only counts when the visitor presses the toggle) */
-    if (window.PFTheme) PFTheme.onChange((mode, byUser) => { if (byUser && mode === "dark") unlock("night"); });
-
-    /* secret: the Konami code */
-    const seq = ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft", "arrowright", "b", "a"];
-    let pos = 0;
-    addEventListener("keydown", e => {
-      const k = (e.key || "").toLowerCase();
-      pos = k === seq[pos] ? pos + 1 : (k === seq[0] ? 1 : 0);
-      if (pos === seq.length) { pos = 0; rain(); unlock("konami"); }
-    });
-  }
+  /* Shared helpers for game.js */
+  Object.assign(PF, { reduced, fine, esc, accent, burst, rain, clamp });
 })();

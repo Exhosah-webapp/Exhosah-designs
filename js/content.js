@@ -150,7 +150,7 @@ const SITE = {
       {
         name: "Prepora",
         kind: "Exam question practice platform",
-        year: "",
+        year: "Aug 2026 – Present",
         tags: ["EdTech", "Web", "Dark mode"],
         images: ["images/prepora.webp"],
         summary: "A question bank for exam practice. This screen shows the wrong-answer state: the chosen option is flagged, and an explanation with a worked example appears below, next to a discussion thread.",
@@ -334,25 +334,59 @@ const SITE = {
     stickers: true,      // draggable stickers in the hero
     scrollSpeed: true,   // marquees speed up while you scroll
     countUp: true,       // stats count up
-    game: true           // progress ring + achievements (bottom-left)
+    game: true,          // XP, levels, achievements, rewards (bottom-left)
+    stars: true,         // 8 hidden stars to find and collect
+    hunt: true           // the Pixel Hunt mini-game in the progress panel
   },
 
-  /* Text for the progress game. Edit titles and descriptions freely.
-     secret: true hides the description until it is unlocked. */
+  /* ---------------------------------------------------------------------
+     THE GAME. Visitors earn XP, level up, unlock accent colours, find hidden
+     stars and play a 20-second mini-game. Edit any text or number below.
+     --------------------------------------------------------------------- */
   game: {
-    levels: ["Newcomer", "Explorer", "Insider", "Almost there", "Collaborator"],
+    // XP needed to reach each level. Add or remove rows freely.
+    levels: [
+      { name: "Newcomer",     xp: 0 },
+      { name: "Explorer",     xp: 40 },
+      { name: "Insider",      xp: 110 },
+      { name: "Regular",      xp: 200 },
+      { name: "Collaborator", xp: 320 },
+      { name: "Legend",       xp: 480 }
+    ],
+
+    // XP awarded for each kind of action.
+    xp: { section: 10, achievement: 25, star: 15, huntPerPoint: 3 },
+
+    huntTarget: 25,      // Pixel Hunt score needed for the "Sharpshooter" achievement
+
     completeMessage: "You've seen it all. Let's work together.",
+
+    // Accent colours unlocked as visitors level up (level = level number needed).
+    // "light" is used in light mode, "dark" in dark mode.
+    accents: [
+      { name: "Mint",   light: "#087f60", dark: "#4be3b4", level: 2 },
+      { name: "Coral",  light: "#d63a3f", dark: "#ff8a8e", level: 3 },
+      { name: "Violet", light: "#6d3df5", dark: "#b79cff", level: 4 },
+      { name: "Amber",  light: "#a85a00", dark: "#ffc453", level: 5 }
+    ],
+
+    // title = name shown when unlocked, desc = what they did, quest = hint shown
+    // while locked. secret: true hides everything until it is unlocked.
     achievements: {
-      start:   { title: "First steps",      desc: "Scrolled past the intro" },
-      work:    { title: "Window shopper",   desc: "Found the selected work" },
-      gallery: { title: "Gallery explorer", desc: "Flipped through a project's images" },
-      fine:    { title: "Fine print",       desc: "Opened two experience entries" },
-      play:    { title: "Playful",          desc: "Dragged a sticker around" },
-      hello:   { title: "Say hello",        desc: "Reached for the contact links" },
-      night:   { title: "Night owl",        desc: "Switched to dark mode" },
-      all:     { title: "Completionist",    desc: "Explored every section" },
+      start:   { title: "First steps",      desc: "Scrolled past the intro",                    quest: "Scroll past the intro" },
+      work:    { title: "Window shopper",   desc: "Found the selected work",                    quest: "Visit the selected work" },
+      gallery: { title: "Gallery explorer", desc: "Flipped through a project's images",         quest: "Flip through a project's images" },
+      fine:    { title: "Fine print",       desc: "Opened two experience entries",              quest: "Open two experience entries" },
+      play:    { title: "Playful",          desc: "Dragged a sticker around",                   quest: "Drag a sticker in the hero" },
+      hello:   { title: "Say hello",        desc: "Reached for the contact links",              quest: "Click an email or social link" },
+      night:   { title: "Night owl",        desc: "Switched to dark mode",                      quest: "Switch to dark mode" },
+      stars:   { title: "Star collector",   desc: "Found all 8 hidden stars",                   quest: "Find all 8 hidden stars" },
+      hunt:    { title: "Sharpshooter",     desc: "Scored 25 or more in Pixel Hunt",            quest: "Score 25 in Pixel Hunt" },
+      painter: { title: "Colour theory",    desc: "Tried a new accent colour",                  quest: "Try a new accent colour (unlock at level 2)" },
+      all:     { title: "Completionist",    desc: "Explored every section",                     quest: "Explore every section" },
+      return:  { title: "Welcome back",     desc: "Came back for a second visit",               quest: "Come back another day" },
       speed:   { title: "Speed reader",     desc: "Scrolled fast enough to rev up the marquees", secret: true },
-      konami:  { title: "Secret code",      desc: "Found the hidden keyboard shortcut",           secret: true }
+      konami:  { title: "Secret code",      desc: "Found the hidden keyboard shortcut",         secret: true }
     }
   }
 };
