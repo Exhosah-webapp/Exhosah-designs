@@ -39,13 +39,19 @@
     const slides = list.map((src, n) =>
       `<img class="slide${n === 0 ? " on" : ""}" src="${esc(src)}" alt="${esc(name)}, image ${n + 1} of ${list.length}" loading="${i < 2 ? "eager" : "lazy"}"
         data-ph="${esc(`<div class="ph" style="--h:${hue(name)}"><span>Image not found: ${esc(src)}</span></div>`)}" onerror="this.outerHTML=this.dataset.ph">`).join("");
-    const ui = list.length > 1 ? `
+    const multi = list.length > 1;
+    const segs = multi ? `<div class="segs" aria-hidden="true">${list.map((_, n) => `<i${n === 0 ? ' class="cur"' : ""}></i>`).join("")}</div>` : "";
+    const ui = `
       <div class="gal" role="group" aria-label="${esc(name)} images">
-        <button type="button" data-dir="-1" aria-label="Previous image">‹</button>
-        <span class="count" aria-live="polite">1 / ${list.length}</span>
-        <button type="button" data-dir="1" aria-label="Next image">›</button>
-      </div>` : "";
-    return slides + ui;
+        ${multi ? `<button type="button" data-dir="-1" aria-label="Previous image">‹</button>
+        <span class="count" aria-live="off">1 / ${list.length}</span>
+        <button type="button" data-dir="1" aria-label="Next image">›</button>` : ""}
+        <button type="button" class="pp" data-pause aria-pressed="false" aria-label="Pause image motion">
+          <svg class="i-pause" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+          <svg class="i-play" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10-6.5a1 1 0 0 0 0-1.72l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>
+        </button>
+      </div>`;
+    return slides + segs + ui;
   }
   function avatar(item) {
     const h = hue(item.company);
@@ -204,19 +210,61 @@
   });
   Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 1200))]).then(go);
 
-  // Project image slideshows
-  document.querySelectorAll("[data-gallery]").forEach(box => {
-    const slides = [...box.querySelectorAll(".slide")], count = box.querySelector(".count");
-    if (slides.length < 2) return;
-    let cur = 0;
-    box.addEventListener("click", e => {
-      const btn = e.target.closest("button[data-dir]"); if (!btn) return;
-      slides[cur].classList.remove("on");
-      cur = (cur + Number(btn.dataset.dir) + slides.length) % slides.length;
-      slides[cur].classList.add("on");
-      count.textContent = `${cur + 1} / ${slides.length}`;
+  // Project covers in motion: every image slowly pans and zooms, and projects with several
+  // images auto-advance like a short video. Only runs while a card is on screen, and the
+  // visitor can pause it. Skipped for "reduce motion" and when effects.coverMotion is false.
+  (function covers() {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionOn = !reduce && !(S.effects && S.effects.coverMotion === false);
+    const secs = Number(S.work && S.work.slideSeconds) || 4.5;
+    document.documentElement.style.setProperty("--slide", secs + "s");
+
+    document.querySelectorAll("[data-gallery]").forEach(box => {
+      const slides = [...box.querySelectorAll(".slide")];
+      const count = box.querySelector(".count");
+      const segs = [...box.querySelectorAll(".segs i")];
+      const pp = box.querySelector(".pp");
+      let cur = 0, visible = false, paused = false;
+
+      const playing = () => motionOn && !paused && visible && !document.hidden;
+      const sync = () => box.classList.toggle("running", playing());
+      const show = n => {
+        if (slides.length < 2) return;
+        slides[cur].classList.remove("on");
+        cur = (n + slides.length) % slides.length;
+        slides[cur].classList.add("on");
+        if (count) count.textContent = `${cur + 1} / ${slides.length}`;
+        segs.forEach((seg, k) => { seg.className = k < cur ? "done" : k === cur ? "cur" : ""; });
+      };
+
+      if (motionOn) box.classList.add("motion");
+      else {
+        if (pp) pp.remove();
+        const g = box.querySelector(".gal");
+        if (g && !g.querySelector("button")) g.remove();
+      }
+
+      box.addEventListener("click", e => {
+        const dir = e.target.closest("button[data-dir]");
+        if (dir) { show(cur + Number(dir.dataset.dir)); return; }
+        const p = e.target.closest("[data-pause]");
+        if (p) {
+          paused = !paused;
+          p.setAttribute("aria-pressed", String(paused));
+          p.setAttribute("aria-label", paused ? "Play image motion" : "Pause image motion");
+          sync();
+        }
+      });
+      // The progress bar of the current image finishing is what moves the slideshow on,
+      // so pausing, scrolling away and resuming all stay in step.
+      box.addEventListener("animationend", e => { if (e.animationName === "fill" && playing()) show(cur + 1); });
+
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(es => { visible = es[0].isIntersecting; sync(); }, { threshold: 0.35 }).observe(box);
+      } else { visible = true; sync(); }
+      document.addEventListener("visibilitychange", sync);
     });
-  });
+  })();
 
   // Hairline under the nav once you scroll
   const navEl = document.getElementById("nav");

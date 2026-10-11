@@ -510,7 +510,7 @@
   let opened = 0;
   document.addEventListener("click", e => {
     const t = e.target;
-    if (t.closest(".gal button")) unlock("gallery");
+    if (t.closest(".gal button[data-dir]")) unlock("gallery");
     const sum = t.closest("summary");
     if (sum && sum.parentElement && !sum.parentElement.open && ++opened >= 2) unlock("fine");
     if (t.closest('a[href^="mailto:"], .foot-links a')) unlock("hello");

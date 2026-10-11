@@ -74,11 +74,12 @@ const SITE = {
   work: {
     heading: "Selected work",
     intro: "Landing pages, dashboards and AI products I've designed.",
+    slideSeconds: 4.5,   // seconds each image stays up in a project slideshow
     projects: [
       {
         name: "EaseDrive",
         kind: "Ride-hailing shuttle booking platform",
-        year: "2025",
+        year: "Mar 2025 – Aug 2025",
         tags: ["Mobile", "Web", "Marketplace"],
         images: ["images/easedrive.webp"],
         summary: "End-to-end design of a responsive shuttle booking platform: 70+ high-fidelity screens across passenger, driver, admin and marketing experiences. A multi-driver offer flow lets passengers compare offers before confirming a ride.",
@@ -96,7 +97,7 @@ const SITE = {
       {
         name: "Xpress Learner AI",
         kind: "AI video response generator",
-        year: "2025",
+        year: "Jan 2025 – Mar 2025",
         tags: ["AI", "EdTech", "Desktop app", "Landing page"],
         images: ["images/xpress-learner-ai.webp"],
         summary: "An AI-powered video response generator that makes educational content more accessible and interactive, with video and text feedback formats users can choose between. Covers the desktop app, landing page and features.",
@@ -105,7 +106,7 @@ const SITE = {
       {
         name: "Mycaban",
         kind: "Housing marketplace and agent dashboard",
-        year: "",
+        year: "Oct 2024 – Dec 2024",
         tags: ["Real estate", "Web", "Dashboard"],
         images: ["images/mycaban-landing.webp", "images/mycaban-schedule.webp"],
         summary: "A housing platform that connects property owners with buyers and renters. The landing page centres on property search by location, type and price, and the agent dashboard includes a weekly schedule for site inspections.",
@@ -114,7 +115,7 @@ const SITE = {
       {
         name: "SurePlugs",
         kind: "Electronics e-commerce platform",
-        year: "",
+        year: "Aug 2026 – Present",
         tags: ["E-commerce", "Web", "Rewards"],
         images: ["images/sureplugs-home.webp", "images/sureplugs-benefits.webp"],
         summary: "An electronics store with a category-led home page and a rewards layer: shoppers earn points by completing tasks and can share a birthday wishlist with friends.",
@@ -123,7 +124,7 @@ const SITE = {
       {
         name: "Flex Living",
         kind: "Landing page for Base360.AI, short-term rental automation",
-        year: "",
+        year: "May 2025",
         tags: ["AI", "SaaS", "Landing page"],
         images: ["images/flex-living.webp"],
         summary: "A landing page for an AI platform that automates short-term rentals, covering bookings, pricing, guest communication, compliance and analytics in one dashboard.",
@@ -131,20 +132,20 @@ const SITE = {
       },
       {
         name: "Bclics",
-        kind: "Marketplace admin dashboard",
-        year: "",
-        tags: ["Dashboard", "Marketplace", "Dark mode"],
+        kind: "Marketplace: mobile app, landing page and admin dashboard",
+        year: "Feb 2025 – Jan 2026",
+        tags: ["Mobile app", "Landing page", "Dashboard"],
         images: ["images/bclics-admin.webp"],
-        summary: "A dark admin dashboard for the Bclics marketplace: key totals, an adverts chart, and a quick-action panel for reviewing reports, approving payouts, verifying sellers and handling scam alerts.",
+        summary: "A full project for the Bclics marketplace, covering a mobile app, a landing page and an admin dashboard. The dashboard shown here is dark, with key totals, an adverts chart and a quick-action panel for reviewing reports, approving payouts, verifying sellers and handling scam alerts.",
         link: "", linkLabel: ""
       },
       {
         name: "BeckyShops",
-        kind: "Store-link platform for social sellers",
-        year: "",
-        tags: ["E-commerce", "Dashboard", "Landing page"],
+        kind: "Full website for a social-selling platform",
+        year: "Mar 2025",
+        tags: ["E-commerce", "Website", "Landing page"],
         images: ["images/beckyshops.webp"],
-        summary: "A landing page and seller dashboard that give sellers one shareable store link, with buyers ordering through WhatsApp, Instagram DM or email. The dashboard tracks store visits, products, orders and wallet balance.",
+        summary: "I designed the full website for BeckyShops, a platform that gives sellers one shareable store link so buyers can order through WhatsApp, Instagram DM or email. The landing page leads with that promise and previews the seller dashboard.",
         link: "", linkLabel: ""
       },
       {
@@ -157,9 +158,9 @@ const SITE = {
         link: "", linkLabel: ""
       },
       {
-        name: "AI Document Verification",
-        kind: "Landing page",
-        year: "",
+        name: "AIIS",
+        kind: "AI document verification landing page",
+        year: "Apr 2025 – May 2025",
         tags: ["AI", "Landing page", "Bold type"],
         images: ["images/ai-document-verification.webp"],
         summary: "A bold, high-contrast landing page for an AI service that verifies visa applications, passports and immigration paperwork, with two clear actions: upload documents or view a sample report.",
@@ -246,7 +247,7 @@ const SITE = {
   },
 
   experience: {
-    heading: "Experience",
+    heading: "More Experience",
     items: [
       {
         company: "Artivio", role: "Product Designer", location: "Ride-hailing app",
@@ -336,7 +337,8 @@ const SITE = {
     countUp: true,       // stats count up
     game: true,          // XP, levels, achievements, rewards (bottom-left)
     stars: true,         // 8 hidden stars to find and collect
-    hunt: true           // the Pixel Hunt mini-game in the progress panel
+    hunt: true,          // the Pixel Hunt mini-game in the progress panel
+    coverMotion: true    // project images drift and auto-advance like a video
   },
 
   /* ---------------------------------------------------------------------
