@@ -24,10 +24,14 @@
 
   /* colours for both modes, applied through CSS variables */
   const style = document.createElement("style");
+  const PAL = Array.isArray(T.palette) && T.palette.length >= 5 ? T.palette : ["#2f4bff", "#ff5d8f", "#ffb020", "#2bd4a7", "#7a5cff"];
+  const palVars = PAL.slice(0, 5).map((c, i) => `--p${i + 1}:${c}`).join(";");
   style.textContent =
-    `:root{${lightVars};color-scheme:light}` +
+    `:root{${lightVars};${palVars};--accent-hi:${dk.accent};color-scheme:light}` +
     (T.darkMode === false ? "" : `:root[data-theme="dark"]{${vars(dk)};color-scheme:dark}`);
   document.head.appendChild(style);
+
+  root.setAttribute("data-vibe", T.vibe === "calm" ? "calm" : "vivid");
 
   if (T.darkMode === false) { root.setAttribute("data-theme", "light"); return; }
 
