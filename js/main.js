@@ -170,7 +170,7 @@
         <span class="xp-main"><b>${esc(e.company)}</b><span>${esc(e.role)}${e.location ? ", " + esc(e.location) : ""}</span></span>
         <span class="xp-icon" aria-hidden="true"></span>
       </summary>
-      <div class="xp-body"><ul>${e.bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul></div>
+      <div class="xp-body"><ul>${e.bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>${e.link ? `<p class="xp-link"><a href="${esc(e.link)}" target="_blank" rel="noopener">Visit ${esc(e.link.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, ""))}</a></p>` : ""}</div>
     </details>`).join("");
   const experience = `
   <section id="experience" class="sec wrap" style="padding-top:0">

@@ -177,10 +177,10 @@ const SITE = {
       },
       {
         show: false,
-        name: "Artivio", kind: "Ride-hailing app redesign", year: "2026",
-        tags: ["Mobile", "UX audit", "Prototyping"], images: [],
-        summary: "Stakeholder discovery and a UX audit of the existing platform, followed by journey maps, information architecture, wireframes, high-fidelity Figma designs and interactive prototypes.",
-        link: "", linkLabel: ""
+        name: "Artivio", kind: "Artisan marketplace", year: "Mar 2026 – Aug 2026",
+        tags: ["Marketplace", "Web", "Mobile"], images: [],
+        summary: "A digital marketplace connecting customers with skilled artisans across web and mobile. I designed the client and artisan journeys, from discovery and negotiation to payments, job progress, completion and wallet, including an escrow-based payment workflow that holds funds until the customer confirms the job is done.",
+        link: "https://artivios.com/", linkLabel: "Visit Artivio"
       },
       {
         show: false,
@@ -250,13 +250,14 @@ const SITE = {
     heading: "More Experience",
     items: [
       {
-        company: "Artivio", role: "Product Designer", location: "Ride-hailing app",
-        dates: "Mar 2026 – Aug 2026", logo: "",
+        company: "Artivio", role: "UI/UX Designer", location: "Artisan App",
+        dates: "Mar 2026 – Aug 2026", logo: "", link: "https://artivios.com/",
         bullets: [
-          "Facilitated stakeholder discovery sessions to understand business objectives, product challenges and opportunities before the redesign.",
-          "Ran a UX audit of the existing platform, identifying usability issues, inconsistent interaction patterns and friction across critical journeys.",
-          "Produced journey maps, information architecture, wireframes, high-fidelity Figma designs and interactive prototypes to validate solutions before development.",
-          "Documented UX findings and prioritized recommendations that informed the product roadmap."
+          "Designed a digital marketplace connecting customers with skilled artisans across web and mobile experiences.",
+          "Designed client and artisan journeys covering discovery, negotiation, payments, job progress, completion, and wallet management.",
+          "Designed an escrow-based payment workflow where funds are held by the platform until the customer confirms job completion.",
+          "Created distinct experiences for clients and artisans while maintaining consistency through reusable components and design patterns.",
+          "Developed responsive interfaces and interactive prototypes to communicate product behavior and workflows to stakeholders and developers."
         ]
       },
       {
@@ -337,9 +338,9 @@ const SITE = {
 
       /* ============================== ARTISAN ============================== */
       {
-        name: "Artisan",
-        kind: "Marketplace connecting artisans and clients",
-        summary: "Research for a platform that connects artisans such as electricians and plumbers with clients who need them. I compared seven competing services, mapped the problems both sides face, and turned them into an MVP feature set, four sitemaps and two user flows.",
+        name: "Artivio",
+        kind: "Artisan marketplace connecting artisans and clients",
+        summary: "Research for Artivio, a platform that connects artisans such as electricians and plumbers with clients who need them. I compared seven competing services, mapped the problems both sides face, and turned them into an MVP feature set, four sitemaps and two user flows.",
         stats: [["7", "competitors reviewed"], ["11", "user problems mapped"], ["4", "sitemaps"], ["2", "user flows"]],
         competitors: ["Fixit.ng", "Thumbtack", "TaskRabbit", "CheckArtisan", "Jiji Services", "Wrkman", "Power Now"],
         findings: [
