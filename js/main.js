@@ -89,6 +89,7 @@
     <a class="brand" href="#top">${esc(P.nickname || P.name)}</a>
     <nav aria-label="Primary">
       <a href="#work">${roll("Work")}</a>
+      ${S.research && window.PFResearch ? `<a href="#research">${roll("Research")}</a>` : ""}
       <a href="#about">${roll("About")}</a>
       <a href="#experience">${roll("Experience")}</a>
       <button class="theme-toggle" type="button" aria-label="Switch to dark mode">
@@ -143,6 +144,12 @@
 
   const facts = S.about.details.map(d => `
     <div class="fact"><dt>${esc(d.label)}</dt><dd><ul>${d.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></dd></div>`).join("");
+  const research = (S.research && window.PFResearch && S.research.products && S.research.products.length) ? `
+  <section id="research" class="sec wrap" style="padding-top:0">
+    <div class="sec-head">${heading("h2", "h2", S.research.heading || "Research and user flows")}<p>${esc(S.research.intro || "")}</p></div>
+    ${PFResearch.html(S.research)}
+  </section>` : "";
+
   const about = `
   <section id="about" class="sec wrap">
     <div class="about">
@@ -179,7 +186,9 @@
     <p class="fine">© ${new Date().getFullYear()} ${esc(P.name)}</p>
   </footer>`;
 
-  document.getElementById("app").innerHTML = nav + `<main>${hero}${work}${impact}${about}${experience}</main>` + footer;
+  document.getElementById("app").innerHTML = nav + `<main>${hero}${work}${impact}${research}${about}${experience}</main>` + footer;
+
+  if (window.PFResearch) PFResearch.init();
 
   /* ---------- theme toggle ---------- */
   const tbtn = document.querySelector(".theme-toggle");

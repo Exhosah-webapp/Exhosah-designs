@@ -22,7 +22,7 @@
   /* ---------------------------------------------------------------------
      Config
      --------------------------------------------------------------------- */
-  const SECTIONS = ["top", "work", "results", "about", "experience", "contact"];
+  const SECTIONS = ["top", "work", "results", "research", "about", "experience", "contact"];
   const ACH = G.achievements || {};
   const XP = Object.assign({ section: 10, achievement: 25, star: 15, huntPerPoint: 3 }, G.xp || {});
   const HUNT_TARGET = G.huntTarget || 25;
@@ -511,6 +511,7 @@
   document.addEventListener("click", e => {
     const t = e.target;
     if (t.closest(".gal button[data-dir]")) unlock("gallery");
+    if (t.closest("#research [role=tab]")) unlock("flow");
     const sum = t.closest("summary");
     if (sum && sum.parentElement && !sum.parentElement.open && ++opened >= 2) unlock("fine");
     if (t.closest('a[href^="mailto:"], .foot-links a')) unlock("hello");
