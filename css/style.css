@@ -442,3 +442,66 @@ img.av{display:block;object-fit:cover}
 @media (prefers-reduced-motion:reduce){
   .motion .slide.on,.motion .segs i.cur::after{animation:none!important}
 }
+
+/* =========================================================================
+   RESEARCH AND USER FLOWS (driven by js/research.js)
+   ========================================================================= */
+.rp-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,48px)}
+.rp-tabs [role="tab"]{border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:15px;font-weight:500;padding:11px 20px;border-radius:999px;cursor:pointer;
+  transition:background .25s,color .25s,border-color .25s}
+.rp-tabs [role="tab"]:hover{color:var(--ink);background:var(--surface)}
+.rp-tabs [role="tab"][aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.rp[hidden]{display:none}
+.rp-top{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(24px,5vw,72px);align-items:start}
+.rp-kind{color:var(--muted);font-size:15px}
+.rp-sum{margin-top:8px;font-size:clamp(1.25rem,2.2vw,1.7rem);line-height:1.28;letter-spacing:-.025em;font-weight:500}
+.rp-stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.rp-stats li{padding:7px 14px;border-radius:999px;border:1px solid var(--line);font-size:14px;color:var(--muted)}
+.rp-stats b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.rp-comp small{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
+.rp-comp p{line-height:1.55}
+
+.rp h4{font-size:1.2rem;letter-spacing:-.02em;font-weight:600}
+.rp-find{margin-top:clamp(36px,5vw,64px)}
+.fr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,3vw,40px);padding:15px 0;border-top:1px solid var(--line)}
+.fr span:first-child{font-weight:500}
+.fr span:last-child{color:var(--muted)}
+.fh{margin-top:14px;padding:10px 0;border-top:0;border-bottom:1.5px solid var(--ink)}
+.fh span,.fh span:first-child,.fh span:last-child{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.mvp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px clamp(16px,3vw,40px);margin-top:14px}
+.mvp small{display:block;color:var(--muted);font-size:13px;margin-bottom:8px}
+.mvp ul{display:grid;gap:8px;list-style:disc;padding-left:1.1em}
+
+.dg-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0}
+.dg-tabs [role="tab"]{border:0;background:var(--surface);color:var(--muted);font:inherit;font-size:14px;font-weight:500;padding:8px 15px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+.dg-tabs [role="tab"]:hover{color:var(--ink)}
+.dg-tabs [role="tab"][aria-selected="true"]{background:var(--accent);color:var(--paper)}
+.dgm{overflow:auto;max-height:min(72vh,640px);border:1px solid var(--line);border-radius:22px;background:var(--surface);cursor:grab;overscroll-behavior:contain}
+.dgm[hidden]{display:none}
+.dgm.drag{cursor:grabbing;user-select:none}
+.dg{display:block;max-width:none}
+.dg text{font-family:var(--font)}
+.dg .de path{fill:none;stroke:var(--muted);stroke-width:1.4;opacity:.7}
+.dg .ah{fill:var(--muted)}
+.dg .term{fill:var(--muted)}
+.dg .nn{fill:var(--paper);stroke:var(--line);stroke-width:1.2}
+.dg .ns{fill:var(--paper);stroke:var(--accent);stroke-width:1.6}
+.dg .nd{fill:var(--paper);stroke:var(--accent);stroke-width:1.6}
+.dg .np{fill:var(--ink)}
+.dg .nt{font-size:12.5px;font-weight:500;fill:var(--ink)}
+.dg .ntp{font-size:12.5px;font-weight:500;fill:var(--paper)}
+.dg .el{font-size:11px;font-weight:600;fill:var(--accent);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.dg-hint{margin-top:10px;color:var(--muted);font-size:13px}
+.rp-board{margin-top:24px}
+.rp-board a{color:var(--accent);font-weight:500;border-bottom:1.5px solid currentColor}
+
+@media (max-width:820px){
+  .rp-top{grid-template-columns:1fr}
+  .fr{grid-template-columns:1fr;gap:4px}
+  .fh{display:none}
+  .mvp{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .rp-tabs [role="tab"],.dg-tabs [role="tab"]{transition:none!important}
+}
