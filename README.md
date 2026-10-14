@@ -43,7 +43,7 @@ Everything lives in one object called `SITE`. Change what's inside the quotes.
 | Projects (title, description, tags, images, link) | `work.projects` |
 | Result cards that scroll across the page | `impact.items` |
 | About text, counting stats, skills, education | `about` |
-| Jobs and bullet points | `experience.items` |
+| Jobs and bullet points (add `link: "https://..."` to show a link) | `experience.items` |
 | Research, user flows and sitemaps | `research.products` |
 | Closing headline | `contact` |
 | Colours (light and dark) and font | `theme` |
