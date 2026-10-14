@@ -505,3 +505,6 @@ img.av{display:block;object-fit:cover}
 @media (prefers-reduced-motion:reduce){
   .rp-tabs [role="tab"],.dg-tabs [role="tab"]{transition:none!important}
 }
+
+.xp-link{margin-top:14px}
+.xp-link a{color:var(--accent);font-weight:500;border-bottom:1.5px solid currentColor}
